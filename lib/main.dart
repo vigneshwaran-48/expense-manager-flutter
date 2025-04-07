@@ -1,3 +1,4 @@
+import 'package:expense_manager/app.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,10 +12,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Expense Manager",
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white
+        ),
       ),
-      home: Text("Hello"),
+      home: App(),
     );
   }
 }
