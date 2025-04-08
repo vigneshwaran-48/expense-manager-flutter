@@ -1,4 +1,4 @@
-import 'package:expense_manager/app.dart';
+import 'package:expense_manager/config/router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,18 +10,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: "Expense Manager",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black,
-        canvasColor: Colors.black,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
+        colorScheme: ColorScheme.highContrastDark(),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          selectedItemColor: Colors.red,
+          unselectedItemColor: Colors.white,
         ),
       ),
-      home: App(),
+      routerConfig: AppRouter.instance.router,
     );
   }
 }
