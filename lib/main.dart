@@ -15,9 +15,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.black,
+        canvasColor: Colors.black,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.black,
-          foregroundColor: Colors.white
+          foregroundColor: Colors.white,
         ),
       ),
       home: App(),
