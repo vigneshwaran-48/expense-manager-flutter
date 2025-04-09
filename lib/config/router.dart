@@ -23,7 +23,7 @@ class AppRouter {
         ShellRoute(
           builder:
               (context, state, child) =>
-                  AppLayout(key: UniqueKey(), child: child),
+                  AppLayout(child: child),
           routes: [
             GoRoute(path: "/", builder: (context, state) => Text("Dashboard")),
             GoRoute(
