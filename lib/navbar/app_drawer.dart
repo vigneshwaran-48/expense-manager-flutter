@@ -26,13 +26,19 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NavbarCubit, int>(
-      builder: (context, index) {
+      builder: (context, currentIndex) {
         return Drawer(
           child: ListView.builder(
             itemCount: _navTitles.length,
             itemBuilder: (context, index) {
+              bool isActive = index == currentIndex;
               return ListTile(
+                selected: isActive,
                 leading: _navIcons[index],
+                textColor: Colors.white30,
+                selectedColor: Colors.white,
+                selectedTileColor: Colors.red,
+                iconColor: Colors.white30,
                 title: Text(_navTitles[index]),
                 onTap: () {
                   context.read<NavbarCubit>().updateIndex(index);
