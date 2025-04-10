@@ -17,9 +17,9 @@ class AppBottomNavbar extends StatelessWidget {
             context.go(navRoutes[index]);
           },
           currentIndex: index,
-          backgroundColor: Colors.white10,
           selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
           showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.dashboard),
