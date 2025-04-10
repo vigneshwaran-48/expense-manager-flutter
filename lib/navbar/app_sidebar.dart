@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({super.key});
+class AppSidebar extends StatelessWidget {
+  const AppSidebar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NavbarCubit, int>(
       builder: (context, currentIndex) {
-        return Drawer(
+        return Center(
           child: ListView.builder(
             itemCount: navTitles.length,
             itemBuilder: (context, index) {
@@ -27,7 +27,6 @@ class AppDrawer extends StatelessWidget {
                 onTap: () {
                   context.read<NavbarCubit>().updateIndex(index);
                   context.go(navRoutes[index]);
-                  Navigator.pop(context); // Closes the drawer.
                 },
               );
             },

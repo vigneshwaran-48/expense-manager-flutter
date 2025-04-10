@@ -1,7 +1,7 @@
 import 'package:expense_manager/navbar/app_bottom_navbar.dart';
 import 'package:expense_manager/navbar/app_drawer.dart';
+import 'package:expense_manager/navbar/app_sidebar.dart';
 import 'package:flutter/material.dart';
-
 
 class AppLayout extends StatelessWidget {
   const AppLayout({super.key, required this.child});
@@ -18,7 +18,13 @@ class AppLayout extends StatelessWidget {
       appBar: AppBar(title: Text("Home")),
       drawer: isTabLikeScreen ? AppDrawer() : null,
       bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
-      body: child,
+      body: Row(
+        children: [
+          if (!isMobile && !isTabLikeScreen)
+            SizedBox(width: 250, child: AppSidebar()),
+          Expanded(child: child),
+        ],
+      ),
     );
   }
 }
