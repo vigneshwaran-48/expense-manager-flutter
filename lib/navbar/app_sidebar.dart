@@ -11,7 +11,8 @@ class AppSidebar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NavbarCubit, int>(
       builder: (context, currentIndex) {
-        return Center(
+        return Container(
+          color: const Color(0xFF1B1B1B),
           child: ListView.builder(
             itemCount: navTitles.length,
             itemBuilder: (context, index) {

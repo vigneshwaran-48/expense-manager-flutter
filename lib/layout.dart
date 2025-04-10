@@ -14,16 +14,21 @@ class AppLayout extends StatelessWidget {
     bool isMobile = width <= 550;
     bool isTabLikeScreen = width > 550 && width < 1200;
 
-    return Scaffold(
-      appBar: AppBar(title: Text("Home")),
-      drawer: isTabLikeScreen ? AppDrawer() : null,
-      bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
-      body: Row(
-        children: [
-          if (!isMobile && !isTabLikeScreen)
-            SizedBox(width: 250, child: AppSidebar()),
-          Expanded(child: child),
-        ],
+    return Padding(
+      padding: EdgeInsets.all(0),
+      child: Scaffold(
+        appBar: AppBar(title: Text("Home")),
+        drawer: isTabLikeScreen ? AppDrawer() : null,
+        bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
+        body: Row(
+          children: [
+            if (!isMobile && !isTabLikeScreen)
+              SizedBox(width: 250, child: AppSidebar()),
+            Expanded(
+              child: Container(color: const Color(0xFF1B1B1B), child: child),
+            ),
+          ],
+        ),
       ),
     );
   }
