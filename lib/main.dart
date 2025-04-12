@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
       title: "Expense Manager",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.highContrastDark(),
+        colorScheme: ColorScheme.highContrastDark().copyWith(
+          surface: const Color(0xFF1B1B1B),
+        ),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           selectedItemColor: Colors.red,
           unselectedItemColor: Colors.white,

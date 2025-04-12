@@ -14,22 +14,52 @@ class AppLayout extends StatelessWidget {
     bool isMobile = width <= 550;
     bool isTabLikeScreen = width > 550 && width < 1200;
 
-    return Padding(
-      padding: EdgeInsets.all(0),
-      child: Scaffold(
-        appBar: AppBar(title: Text("Home")),
-        drawer: isTabLikeScreen ? AppDrawer() : null,
-        bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
-        body: Row(
-          children: [
-            if (!isMobile && !isTabLikeScreen)
-              SizedBox(width: 250, child: AppSidebar()),
-            Expanded(
-              child: Container(color: const Color(0xFF1B1B1B), child: child),
+    return Container(
+      color: Theme.of(context).colorScheme.onPrimary,
+      padding: EdgeInsets.all(isMobile ? 0 : 15),
+      child: Row(
+        children: [
+          if (!isMobile && !isTabLikeScreen)
+            Card(
+              margin: EdgeInsets.zero,
+              color: Theme.of(context).colorScheme.surface,
+              child: Row(
+                children: [
+                  AppSidebar(),
+                  Container(
+                    width: 15,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          Expanded(
+            child: Scaffold(
+              appBar: _appBar(),
+              drawer: isTabLikeScreen ? AppDrawer() : null,
+              bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
+              body: Column(
+                children: [
+                  Container(
+                    height: 15,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  Expanded(child: child),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
+}
+
+AppBar _appBar() {
+  return AppBar(
+    title: Text(
+      "Home",
+      style: TextStyle(backgroundColor: const Color(0xFF1B1B1B)),
+    ),
+  );
 }

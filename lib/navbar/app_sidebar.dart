@@ -12,7 +12,7 @@ class AppSidebar extends StatelessWidget {
     return BlocBuilder<NavbarCubit, int>(
       builder: (context, currentIndex) {
         return Container(
-          color: const Color(0xFF1B1B1B),
+          constraints: BoxConstraints(maxWidth: 200),
           child: ListView.builder(
             itemCount: navTitles.length,
             itemBuilder: (context, index) {
