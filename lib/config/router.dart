@@ -1,3 +1,5 @@
+import 'package:expense_manager/auth/login_page.dart';
+import 'package:expense_manager/auth/signup_page.dart';
 import 'package:expense_manager/layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
@@ -21,9 +23,7 @@ class AppRouter {
       initialLocation: "/",
       routes: [
         ShellRoute(
-          builder:
-              (context, state, child) =>
-                  AppLayout(child: child),
+          builder: (context, state, child) => AppLayout(child: child),
           routes: [
             GoRoute(path: "/", builder: (context, state) => Text("Dashboard")),
             GoRoute(
@@ -44,6 +44,8 @@ class AppRouter {
             ),
           ],
         ),
+        GoRoute(path: "/signup", builder: (context, state) => SignupPage()),
+        GoRoute(path: "/login", builder: (context, state) => LoginPage()),
       ],
     );
   }

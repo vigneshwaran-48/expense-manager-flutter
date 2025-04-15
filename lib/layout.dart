@@ -1,7 +1,10 @@
 import 'package:expense_manager/navbar/app_bottom_navbar.dart';
 import 'package:expense_manager/navbar/app_drawer.dart';
 import 'package:expense_manager/navbar/app_sidebar.dart';
+import 'package:expense_manager/navbar/constants.dart';
+import 'package:expense_manager/navbar/navbar_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppLayout extends StatelessWidget {
   const AppLayout({super.key, required this.child});
@@ -16,7 +19,7 @@ class AppLayout extends StatelessWidget {
 
     return Container(
       color: Theme.of(context).colorScheme.onPrimary,
-      padding: EdgeInsets.all(isMobile ? 0 : 15),
+      padding: EdgeInsets.all(isMobile ? 10 : 15),
       child: Row(
         children: [
           if (!isMobile && !isTabLikeScreen)
@@ -57,9 +60,10 @@ class AppLayout extends StatelessWidget {
 
 AppBar _appBar() {
   return AppBar(
-    title: Text(
-      "Home",
-      style: TextStyle(backgroundColor: const Color(0xFF1B1B1B)),
+    title: BlocBuilder<NavbarCubit, int>(
+      builder: (context, index) {
+        return Text(navTitles[index]);
+      },
     ),
   );
 }
