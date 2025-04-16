@@ -1,9 +1,13 @@
 import 'package:expense_manager/config/router.dart';
+import 'package:expense_manager/firebase_options.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiBlocProvider(
       providers: [BlocProvider(create: (_) => NavbarCubit())],
