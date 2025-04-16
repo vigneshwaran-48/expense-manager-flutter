@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -58,7 +59,7 @@ class _LoginFormState extends State<LoginForm> {
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),
                 ),
-                border: const OutlineInputBorder(borderSide: BorderSide()),
+                border: OutlineInputBorder(borderSide: BorderSide()),
                 hintText: 'John Doe',
                 labelText: 'Name',
               ),
@@ -115,6 +116,50 @@ class _LoginFormState extends State<LoginForm> {
                 Padding(padding: EdgeInsets.all(10), child: Text("or")),
                 Expanded(child: Divider(color: Colors.grey, thickness: 1)),
               ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: 200),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                    onPressed: () => {},
+                    icon: FaIcon(FontAwesomeIcons.google),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => {},
+                    icon: FaIcon(FontAwesomeIcons.xTwitter),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => {},
+                    icon: FaIcon(FontAwesomeIcons.facebookF),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
