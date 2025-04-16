@@ -6,9 +6,29 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        constraints: BoxConstraints(maxWidth: 500),
-        child: Column(children: [Text("Expense Manager"), LoginForm()]),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Text(
+                    "Expense Manager",
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: LoginForm(),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -32,21 +52,21 @@ class _LoginFormState extends State<LoginForm> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),
                 ),
-                border: OutlineInputBorder(borderSide: BorderSide()),
+                border: const OutlineInputBorder(borderSide: BorderSide()),
                 hintText: 'John Doe',
                 labelText: 'Name',
               ),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: TextFormField(
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
@@ -66,6 +86,35 @@ class _LoginFormState extends State<LoginForm> {
                 ),
               ),
               obscureText: !_passwordVisible,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => {},
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                ),
+                child: Text("Login"),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: const [
+                Expanded(child: Divider(color: Colors.grey, thickness: 1)),
+                Padding(padding: EdgeInsets.all(10), child: Text("or")),
+                Expanded(child: Divider(color: Colors.grey, thickness: 1)),
+              ],
             ),
           ),
         ],
