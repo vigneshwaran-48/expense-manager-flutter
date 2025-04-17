@@ -1,10 +1,14 @@
+import 'package:expense_manager/auth/bloc/auth_bloc.dart';
+import 'package:expense_manager/auth/bloc/auth_state.dart';
 import 'package:expense_manager/navbar/app_bottom_navbar.dart';
 import 'package:expense_manager/navbar/app_drawer.dart';
 import 'package:expense_manager/navbar/app_sidebar.dart';
 import 'package:expense_manager/navbar/constants.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AppLayout extends StatelessWidget {
   const AppLayout({super.key, required this.child});
@@ -17,42 +21,49 @@ class AppLayout extends StatelessWidget {
     bool isMobile = width <= 550;
     bool isTabLikeScreen = width > 550 && width < 1200;
 
-    return Container(
-      color: Theme.of(context).colorScheme.onPrimary,
-      padding: EdgeInsets.all(isMobile ? 10 : 15),
-      child: Row(
-        children: [
-          if (!isMobile && !isTabLikeScreen)
-            Card(
-              margin: EdgeInsets.zero,
-              color: Theme.of(context).colorScheme.surface,
-              child: Row(
-                children: [
-                  AppSidebar(),
-                  Container(
-                    width: 15,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ],
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is UnAuthenticated) {
+          context.go("/login");
+        }
+      },
+      child: Container(
+        color: Theme.of(context).colorScheme.onPrimary,
+        padding: EdgeInsets.all(isMobile ? 10 : 15),
+        child: Row(
+          children: [
+            if (!isMobile && !isTabLikeScreen)
+              Card(
+                margin: EdgeInsets.zero,
+                color: Theme.of(context).colorScheme.surface,
+                child: Row(
+                  children: [
+                    AppSidebar(),
+                    Container(
+                      width: 15,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: Scaffold(
+                appBar: _appBar(),
+                drawer: isTabLikeScreen ? AppDrawer() : null,
+                bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
+                body: Column(
+                  children: [
+                    Container(
+                      height: 15,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    Expanded(child: child),
+                  ],
+                ),
               ),
             ),
-          Expanded(
-            child: Scaffold(
-              appBar: _appBar(),
-              drawer: isTabLikeScreen ? AppDrawer() : null,
-              bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
-              body: Column(
-                children: [
-                  Container(
-                    height: 15,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  Expanded(child: child),
-                ],
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

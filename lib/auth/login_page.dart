@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -161,6 +162,23 @@ class _LoginFormState extends State<LoginForm> {
                 ],
               ),
             ),
+          ),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Don't have an account?"),
+              SizedBox(width: 5),
+              InkWell(
+                onTap: () {
+                  context.go("/signup");
+                },
+                child: const Text(
+                  "Create Account",
+                  style: TextStyle(color: Colors.blueAccent),
+                ),
+              ),
+            ],
           ),
         ],
       ),

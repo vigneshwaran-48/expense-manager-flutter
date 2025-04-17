@@ -1,3 +1,5 @@
+import 'package:expense_manager/auth/bloc/auth_bloc.dart';
+import 'package:expense_manager/auth/bloc/auth_event.dart';
 import 'package:expense_manager/config/router.dart';
 import 'package:expense_manager/firebase_options.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';
@@ -10,7 +12,10 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => NavbarCubit())],
+      providers: [
+        BlocProvider(create: (_) => NavbarCubit()),
+        BlocProvider(create: (_) => AuthBloc()..add(AppStarted())),
+      ],
       child: const MyApp(),
     ),
   );
