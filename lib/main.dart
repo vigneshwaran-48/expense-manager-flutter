@@ -1,11 +1,13 @@
 import 'package:expense_manager/auth/bloc/auth_bloc.dart';
 import 'package:expense_manager/auth/bloc/auth_event.dart';
+import 'package:expense_manager/auth/bloc/auth_state.dart';
 import 'package:expense_manager/config/router.dart';
 import 'package:expense_manager/firebase_options.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +18,7 @@ void main() async {
         BlocProvider(create: (_) => NavbarCubit()),
         BlocProvider(create: (_) => AuthBloc()..add(AppStarted())),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }

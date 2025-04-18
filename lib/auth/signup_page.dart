@@ -1,4 +1,7 @@
+import 'package:expense_manager/auth/bloc/auth_bloc.dart';
+import 'package:expense_manager/auth/bloc/auth_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignupPage extends StatelessWidget {
@@ -44,7 +47,26 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   bool _passwordVisible = false;
+
+  void _handleSignup() {
+    BlocProvider.of<AuthBloc>(context).add(
+      SignUpUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +85,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 hintText: 'John Doe',
                 labelText: 'Name',
               ),
+              controller: _emailController,
             ),
           ),
           const SizedBox(height: 10),
@@ -87,6 +110,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
               ),
               obscureText: !_passwordVisible,
+              controller: _passwordController,
             ),
           ),
           const SizedBox(height: 10),
@@ -95,7 +119,7 @@ class _SignUpFormState extends State<SignUpForm> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => {},
+                onPressed: _handleSignup,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
                   backgroundColor: Colors.blue,

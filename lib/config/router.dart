@@ -1,4 +1,5 @@
 import 'package:expense_manager/auth/bloc/auth_bloc.dart';
+import 'package:expense_manager/auth/bloc/auth_event.dart';
 import 'package:expense_manager/auth/bloc/auth_state.dart';
 import 'package:expense_manager/auth/login_page.dart';
 import 'package:expense_manager/auth/signup_page.dart';
@@ -25,7 +26,7 @@ class AppRouter {
     _router = GoRouter(
       initialLocation: "/",
       redirect: (context, state) {
-        final authState = context.read<AuthBloc>();
+        final authState = context.read<AuthBloc>().state;
         final isAuthURL =
             state.matchedLocation == "/login" ||
             state.matchedLocation == "/signup";
@@ -36,29 +37,45 @@ class AppRouter {
       },
       routes: [
         ShellRoute(
-          builder: (context, state, child) => AppLayout(child: child),
+          builder:
+              (context, state, child) => BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is Authenticated) {
+                    context.go("/");
+                  }
+                },
+                child: child,
+              ),
           routes: [
-            GoRoute(path: "/", builder: (context, state) => Text("Dashboard")),
-            GoRoute(
-              path: "/expenses",
-              builder: (context, state) => Text("Expenses"),
+            ShellRoute(
+              builder: (context, state, child) => AppLayout(child: child),
+              routes: [
+                GoRoute(
+                  path: "/",
+                  builder: (context, state) => Text("Dashboard"),
+                ),
+                GoRoute(
+                  path: "/expenses",
+                  builder: (context, state) => Text("Expenses"),
+                ),
+                GoRoute(
+                  path: "/family",
+                  builder: (context, state) => Text("Family"),
+                ),
+                GoRoute(
+                  path: "/categories",
+                  builder: (context, state) => Text("Categories"),
+                ),
+                GoRoute(
+                  path: "/settings",
+                  builder: (context, state) => Text("Settings"),
+                ),
+              ],
             ),
-            GoRoute(
-              path: "/family",
-              builder: (context, state) => Text("Family"),
-            ),
-            GoRoute(
-              path: "/categories",
-              builder: (context, state) => Text("Categories"),
-            ),
-            GoRoute(
-              path: "/settings",
-              builder: (context, state) => Text("Settings"),
-            ),
+            GoRoute(path: "/signup", builder: (context, state) => SignupPage()),
+            GoRoute(path: "/login", builder: (context, state) => LoginPage()),
           ],
         ),
-        GoRoute(path: "/signup", builder: (context, state) => SignupPage()),
-        GoRoute(path: "/login", builder: (context, state) => LoginPage()),
       ],
     );
   }
