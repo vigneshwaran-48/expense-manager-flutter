@@ -1,3 +1,4 @@
+import 'package:expense_manager/navbar/Logout.dart';
 import 'package:expense_manager/navbar/nav_list.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';
 import 'package:expense_manager/user/bloc/user_bloc.dart';
@@ -49,6 +50,8 @@ class AppSidebar extends StatelessWidget {
               ),
               SizedBox(height: 40),
               Expanded(child: NavList(selectedIndex: currentIndex)),
+              SizedBox(height: 20),
+              Logout()
             ],
           ),
         );

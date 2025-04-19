@@ -71,5 +71,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
       }
     });
+
+    on<LogoutUser>((event, emit) async {
+      try {
+        await _authenticationService.signOut();
+        emit(UnAuthenticated());
+      } on FirebaseAuthException catch (err) {
+        print(err);
+        emit(
+          AuthError(
+            errMsg:
+                err.message != null ? err.message! : "Error while logging out",
+          ),
+        );
+      }
+    });
   }
 }

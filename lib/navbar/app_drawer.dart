@@ -1,3 +1,4 @@
+import 'package:expense_manager/navbar/Logout.dart';
 import 'package:expense_manager/navbar/nav_list.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';
 import 'package:expense_manager/user/bloc/user_bloc.dart';
@@ -51,6 +52,8 @@ class AppDrawer extends StatelessWidget {
                 },
               ),
             ),
+            SizedBox(height: 20),
+            Logout(),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:expense_manager/auth/bloc/auth_state.dart';
 import 'package:expense_manager/user/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AppListener extends StatelessWidget {
   const AppListener({super.key, required this.child});
@@ -30,6 +31,9 @@ class AppListener extends StatelessWidget {
                         () => ScaffoldMessenger.of(context).clearSnackBars(),
                   ),
                 );
+              }
+              if (state is UnAuthenticated) {
+                context.go("/login");
               }
             },
           ),
