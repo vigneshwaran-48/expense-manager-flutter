@@ -18,11 +18,9 @@ class UserService {
     }
   }
 
-  Future<String> createUser(AppUser user) async {
+  Future<void> createUser(AppUser user) async {
     try {
-      final DocumentReference<Map<String, dynamic>> result =
-          await _usersCollection.add(user.toFireStore());
-      return result.id;
+      await _usersCollection.doc(user.id).set(user.toFireStore());
     } catch (e) {
       print('Error creating user: $e');
       rethrow;
@@ -46,5 +44,4 @@ class UserService {
       return null;
     });
   }
-
 }

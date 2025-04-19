@@ -37,16 +37,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<CreateUser>((event, emit) async {
       try {
         emit(UserLoading());
-        final id = await userService.createUser(event.user);
-        emit(
-          UserLoaded(
-            user: AppUser(
-              id: id,
-              email: event.user.email,
-              name: event.user.name,
-            ),
-          ),
-        );
+        await userService.createUser(event.user);
+        emit(UserLoaded(user: event.user));
       } on FirebaseException catch (err) {
         emit(
           UserError(

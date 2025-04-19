@@ -1,6 +1,8 @@
 import 'package:expense_manager/auth/bloc/auth_bloc.dart';
 import 'package:expense_manager/auth/bloc/auth_event.dart';
 import 'package:expense_manager/auth/bloc/auth_state.dart';
+import 'package:expense_manager/user/AppUser.dart';
+import 'package:expense_manager/user/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -79,6 +81,7 @@ class _LoginFormState extends State<LoginForm> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authenticated && _loading) {
+          BlocProvider.of<UserBloc>(context).add(LoadUser(id: state.user.uid));
           context.go("/");
         }
       },

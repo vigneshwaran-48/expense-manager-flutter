@@ -1,5 +1,6 @@
 import 'package:expense_manager/auth/bloc/auth_bloc.dart';
 import 'package:expense_manager/auth/bloc/auth_state.dart';
+import 'package:expense_manager/user/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,19 +12,39 @@ class AppListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScaffoldMessenger(
-      child: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              buildSnackbar(
-                context: context,
-                isError: true,
-                message: state.errMsg,
-                onClose: () => ScaffoldMessenger.of(context).clearSnackBars(),
-              ),
-            );
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  buildSnackbar(
+                    context: context,
+                    isError: true,
+                    message: state.errMsg,
+                    onClose:
+                        () => ScaffoldMessenger.of(context).clearSnackBars(),
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<UserBloc, UserState>(
+            listener: (context, state) {
+              if (state is UserError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  buildSnackbar(
+                    context: context,
+                    isError: true,
+                    message: state.errMsg,
+                    onClose:
+                        () => ScaffoldMessenger.of(context).clearSnackBars(),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
         child: child,
       ),
     );
