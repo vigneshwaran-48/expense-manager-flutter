@@ -56,6 +56,9 @@ class _SignUpFormState extends State<SignUpForm> {
   bool _loading = false;
 
   void _handleSignup() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
     BlocProvider.of<AuthBloc>(context).add(
       SignUpUser(
         email: _emailController.text,
@@ -78,7 +81,6 @@ class _SignUpFormState extends State<SignUpForm> {
         if (state is Authenticated && _loading) {
           context.go("/");
         }
-
       },
       builder: (context, state) {
         if (state is AuthLoading) {
@@ -94,6 +96,12 @@ class _SignUpFormState extends State<SignUpForm> {
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Email is required";
+                    }
+                    return null;
+                  },
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -112,6 +120,15 @@ class _SignUpFormState extends State<SignUpForm> {
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Password is required";
+                    }
+                    if (value.length < 8) {
+                      return "Password should be greater than 8";
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(

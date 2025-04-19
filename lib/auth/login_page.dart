@@ -45,7 +45,16 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   bool _passwordVisible = false;
+
+  void _handleLogin() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +65,13 @@ class _LoginFormState extends State<LoginForm> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: TextFormField(
+              controller: _emailController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Email is required";
+                }
+                return null;
+              },
               decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),
@@ -70,6 +86,16 @@ class _LoginFormState extends State<LoginForm> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: TextFormField(
+              controller: _passwordController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Password is required";
+                }
+                if (value.length < 8) {
+                  return "Password length should be greater than 8";
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.blueGrey, width: 2.0),
@@ -96,7 +122,7 @@ class _LoginFormState extends State<LoginForm> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => {},
+                onPressed: _handleLogin,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
                   backgroundColor: Colors.blue,
