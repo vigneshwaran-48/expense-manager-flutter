@@ -3,7 +3,9 @@ import 'package:expense_manager/auth/bloc/auth_event.dart';
 import 'package:expense_manager/auth/bloc/auth_state.dart';
 import 'package:expense_manager/auth/login_page.dart';
 import 'package:expense_manager/auth/signup_page.dart';
+import 'package:expense_manager/config/app_listener.dart';
 import 'package:expense_manager/layout.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -26,26 +28,17 @@ class AppRouter {
     _router = GoRouter(
       initialLocation: "/",
       redirect: (context, state) {
-        final authState = context.read<AuthBloc>().state;
         final isAuthURL =
             state.matchedLocation == "/login" ||
             state.matchedLocation == "/signup";
-        if (!isAuthURL && authState is! Authenticated) {
+        if (!isAuthURL && FirebaseAuth.instance.currentUser == null) {
           return "/login";
         }
         return null;
       },
       routes: [
         ShellRoute(
-          builder:
-              (context, state, child) => BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state is Authenticated) {
-                    context.go("/");
-                  }
-                },
-                child: child,
-              ),
+          builder: (context, state, child) => AppListener(child: child),
           routes: [
             ShellRoute(
               builder: (context, state, child) => AppLayout(child: child),

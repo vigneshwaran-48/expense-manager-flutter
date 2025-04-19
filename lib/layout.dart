@@ -21,49 +21,42 @@ class AppLayout extends StatelessWidget {
     bool isMobile = width <= 550;
     bool isTabLikeScreen = width > 550 && width < 1200;
 
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is UnAuthenticated) {
-          context.go("/login");
-        }
-      },
-      child: Container(
-        color: Theme.of(context).colorScheme.onPrimary,
-        padding: EdgeInsets.all(isMobile ? 10 : 15),
-        child: Row(
-          children: [
-            if (!isMobile && !isTabLikeScreen)
-              Card(
-                margin: EdgeInsets.zero,
-                color: Theme.of(context).colorScheme.surface,
-                child: Row(
-                  children: [
-                    AppSidebar(),
-                    Container(
-                      width: 15,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ],
-                ),
-              ),
-            Expanded(
-              child: Scaffold(
-                appBar: _appBar(),
-                drawer: isTabLikeScreen ? AppDrawer() : null,
-                bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
-                body: Column(
-                  children: [
-                    Container(
-                      height: 15,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    Expanded(child: child),
-                  ],
-                ),
+    return Container(
+      color: Theme.of(context).colorScheme.onPrimary,
+      padding: EdgeInsets.all(isMobile ? 10 : 15),
+      child: Row(
+        children: [
+          if (!isMobile && !isTabLikeScreen)
+            Card(
+              margin: EdgeInsets.zero,
+              color: Theme.of(context).colorScheme.surface,
+              child: Row(
+                children: [
+                  AppSidebar(),
+                  Container(
+                    width: 15,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          Expanded(
+            child: Scaffold(
+              appBar: _appBar(),
+              drawer: isTabLikeScreen ? AppDrawer() : null,
+              bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
+              body: Column(
+                children: [
+                  Container(
+                    height: 15,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  Expanded(child: child),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

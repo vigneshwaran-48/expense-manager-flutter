@@ -8,17 +8,12 @@ class AuthenticationService {
   }
 
   Future<User?> signUp(String email, String password) async {
-    try {
-      final UserCredential userCredential = await _firebase
-          .createUserWithEmailAndPassword(
-            email: email.trim(),
-            password: password.trim(),
-          );
-      return userCredential.user;
-    } on FirebaseAuthException catch (err) {
-      print(err.toString());
-    }
-    return null;
+    final UserCredential userCredential = await _firebase
+        .createUserWithEmailAndPassword(
+          email: email.trim(),
+          password: password.trim(),
+        );
+    return userCredential.user;
   }
 
   Future<void> signOut() async {
