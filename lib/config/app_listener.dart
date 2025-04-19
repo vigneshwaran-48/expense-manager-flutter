@@ -16,6 +16,10 @@ class AppListener extends StatelessWidget {
         listeners: [
           BlocListener<AuthBloc, AuthState>(
             listener: (context, state) {
+              if (state is Authenticated &&
+                  context.read<UserBloc>().state is UserInitial) {
+                context.read<UserBloc>().add(LoadUser(id: state.user.uid));
+              }
               if (state is AuthError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   buildSnackbar(

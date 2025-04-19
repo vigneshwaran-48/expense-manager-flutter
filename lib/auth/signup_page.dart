@@ -83,7 +83,11 @@ class _SignUpFormState extends State<SignUpForm> {
         if (state is Authenticated && _loading) {
           BlocProvider.of<UserBloc>(context).add(
             CreateUser(
-              user: AppUser(id: state.user.uid, email: state.user.email!),
+              user: AppUser(
+                id: state.user.uid,
+                email: state.user.email!,
+                name: state.user.email,
+              ),
             ),
           );
           context.go("/");
