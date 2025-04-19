@@ -8,3 +8,10 @@ class SignUpUser extends AuthEvent {
 
   SignUpUser({required this.email, required this.password});
 }
+
+class LoginUser extends AuthEvent {
+  final String email;
+  final String password;
+
+  LoginUser({required this.email, required this.password});
+}

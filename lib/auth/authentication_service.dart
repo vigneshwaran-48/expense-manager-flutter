@@ -16,6 +16,13 @@ class AuthenticationService {
     return userCredential.user;
   }
 
+  Future<User?> login(String email, String password) async {
+    return (await _firebase.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    )).user;
+  }
+
   Future<void> signOut() async {
     final User? firebaseUser = _firebase.currentUser;
     if (firebaseUser != null) {

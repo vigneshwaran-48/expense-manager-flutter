@@ -43,7 +43,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(
           AuthError(
             errMsg:
-                err.message != null ? err.message! : "Unknown firebase error",
+                err.message != null ? err.message! : "Error while signing up",
+          ),
+        );
+      }
+    });
+
+    on<LoginUser>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final user = await _authenticationService.login(
+          event.email,
+          event.password,
+        );
+        if (user != null) {
+          emit(Authenticated(user: user));
+        } else {
+          emit(AuthError(errMsg: "Error while logging in"));
+        }
+      } on FirebaseAuthException catch (err) {
+        print(err);
+        emit(
+          AuthError(
+            errMsg:
+                err.message != null ? err.message! : "Error while logging in",
           ),
         );
       }
