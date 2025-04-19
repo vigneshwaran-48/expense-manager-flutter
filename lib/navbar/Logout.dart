@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Logout extends StatefulWidget {
+  const Logout({super.key});
+
   @override
   State<StatefulWidget> createState() => LogoutState();
 }

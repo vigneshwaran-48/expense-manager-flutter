@@ -4,6 +4,7 @@ import 'package:expense_manager/auth/bloc/auth_state.dart';
 import 'package:expense_manager/auth/login_page.dart';
 import 'package:expense_manager/auth/signup_page.dart';
 import 'package:expense_manager/config/app_listener.dart';
+import 'package:expense_manager/expense/expenses_page.dart';
 import 'package:expense_manager/layout.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -49,7 +50,7 @@ class AppRouter {
                 ),
                 GoRoute(
                   path: "/expenses",
-                  builder: (context, state) => Text("Expenses"),
+                  builder: (context, state) => const ExpensesPage(),
                 ),
                 GoRoute(
                   path: "/family",
