@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_manager/expense/bloc/expenses_bloc.dart';
+import 'package:expense_manager/expense/expense.dart';
 import 'package:expense_manager/user/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ExpenseCreatePage extends StatelessWidget {
@@ -36,6 +40,8 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   DateTime? _selectedDate;
 
   @override
@@ -45,6 +51,22 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
     _amountController.dispose();
     _dateController.dispose();
     super.dispose();
+  }
+
+  void _handleCreateExpense() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    BlocProvider.of<ExpensesBloc>(context).add(
+      AddExpense(
+        expense: Expense(
+          title: _titleController.text,
+          description: _descriptionController.text,
+          amount: double.tryParse(_amountController.text),
+          date: Timestamp.fromDate(_selectedDate!),
+        ),
+      ),
+    );
   }
 
   Future<void> _handleSelectDate(BuildContext context) async {
@@ -94,13 +116,21 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.fromLTRB(10, 40, 10, 10),
       constraints: BoxConstraints(maxWidth: 600),
       child: Form(
+        key: _formKey,
         child: Column(
           children: [
             TextFormField(
               controller: _titleController,
+              maxLength: 50,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Title is required";
+                }
+                return null;
+              },
               decoration: InputDecoration(
                 labelText: "Title",
                 border: OutlineInputBorder(
@@ -113,21 +143,17 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
               controller: _amountController,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return "Amount is required";
+                }
+                if (double.tryParse(value)! <= 0) {
+                  return "Amount should greater than 0";
+                }
+              },
               decoration: InputDecoration(
                 hintText: "Enter a amount",
                 labelText: "Amount",
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            TextFormField(
-              controller: _descriptionController,
-              maxLines: 5,
-              decoration: InputDecoration(
-                labelText: "Description",
-                alignLabelWithHint: true,
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey),
                 ),
@@ -145,6 +171,49 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
                   borderSide: BorderSide(color: Colors.grey),
                 ),
               ),
+            ),
+            SizedBox(height: 20),
+            TextFormField(
+              controller: _descriptionController,
+              maxLines: 5,
+              maxLength: 300,
+              decoration: InputDecoration(
+                labelText: "Description",
+                alignLabelWithHint: true,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () => context.go("/expenses"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
+                      side: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  child: Text("Cancel"),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: _handleCreateExpense,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                  ),
+                  child: Text("Create"),
+                ),
+              ],
             ),
           ],
         ),
