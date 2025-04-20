@@ -18,6 +18,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
         final expenses = await expenseService.getExpenses();
         emit(ExpensesLoaded(expenses: expenses));
       } on FirebaseException catch (err) {
+        print(err);
         emit(
           ExpensesError(
             errMsg:
@@ -27,6 +28,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
           ),
         );
       } catch (err) {
+        print(err);
         emit(ExpensesError(errMsg: "Error while getting expenses"));
       }
     });

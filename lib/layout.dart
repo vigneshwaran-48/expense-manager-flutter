@@ -21,60 +21,43 @@ class AppLayout extends StatelessWidget {
     bool isTabLikeScreen = width > 550 && width < 1200;
 
     return SafeArea(
-      child: BlocBuilder<UserBloc, UserState>(
-        builder: (context, state) {
-          if (state is UserLoading) {
-            return CircularProgressIndicator();
-          }
-          if (state is UserLoaded) {
-            return BlocProvider(
-              create:
-                  (context) => ExpensesBloc(
-                    expenseService: ExpenseService(userId: state.user.id),
-                  ),
-              child: Container(
-                color: Theme.of(context).colorScheme.onPrimary,
-                padding: EdgeInsets.all(isMobile ? 10 : 15),
+      child: Container(
+        color: Theme.of(context).colorScheme.onPrimary,
+        padding: EdgeInsets.all(isMobile ? 10 : 15),
+        child: Row(
+          children: [
+            if (!isMobile && !isTabLikeScreen)
+              Card(
+                margin: EdgeInsets.zero,
+                color: Theme.of(context).colorScheme.surface,
                 child: Row(
                   children: [
-                    if (!isMobile && !isTabLikeScreen)
-                      Card(
-                        margin: EdgeInsets.zero,
-                        color: Theme.of(context).colorScheme.surface,
-                        child: Row(
-                          children: [
-                            AppSidebar(),
-                            Container(
-                              width: 15,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    Expanded(
-                      child: Scaffold(
-                        appBar: _appBar(),
-                        drawer: isTabLikeScreen ? AppDrawer() : null,
-                        bottomNavigationBar:
-                            isMobile ? AppBottomNavbar() : null,
-                        body: Column(
-                          children: [
-                            Container(
-                              height: 15,
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            Expanded(child: child),
-                          ],
-                        ),
-                      ),
+                    AppSidebar(),
+                    Container(
+                      width: 15,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ],
                 ),
               ),
-            );
-          }
-          return Text("Unable to load user details");
-        },
+            Expanded(
+              child: Scaffold(
+                appBar: _appBar(),
+                drawer: isTabLikeScreen ? AppDrawer() : null,
+                bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
+                body: Column(
+                  children: [
+                    Container(
+                      height: 15,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    Expanded(child: child),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

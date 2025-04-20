@@ -19,6 +19,9 @@ class ExpenseService {
     } on FirebaseFirestore catch (err) {
       print(err);
       rethrow;
+    } catch (err) {
+      print(err);
+      rethrow;
     }
   }
 }
