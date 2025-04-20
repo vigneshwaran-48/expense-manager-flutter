@@ -1,21 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_manager/user/AppUser.dart';
 
 class Expense {
   final String? id;
   final String? title;
   final String? description;
-  final String? createdBy;
+  final AppUser? createdBy;
+  final double? amount;
+  final Timestamp? date;
 
-  const Expense({this.id, this.title, this.description, this.createdBy});
+  const Expense({
+    this.id,
+    this.title,
+    this.description,
+    this.createdBy,
+    this.amount,
+    this.date,
+  });
 
-  factory Expense.fromFireStore(
+  static Future<Expense> fromFireStore(
     QueryDocumentSnapshot<Map<String, dynamic>> data,
-  ) {
+  ) async {
+    final createdByRef =
+        data.get("createdBy") as DocumentReference<Map<String, dynamic>>?;
+    AppUser? createdByUser;
+    final createdBySnapshot = await createdByRef?.get();
+    createdByUser = AppUser.fromFireStore(
+      createdBySnapshot!.data()!,
+      createdBySnapshot.id,
+    );
+
     return Expense(
       id: data.id,
       title: data.get("title"),
       description: data.get("description"),
-      createdBy: data.get("createdBy"),
+      createdBy: createdByUser,
+      amount: data.get("amount"),
+      date: data.get("date"),
     );
   }
 }

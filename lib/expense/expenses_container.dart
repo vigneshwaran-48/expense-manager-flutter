@@ -1,4 +1,5 @@
 import 'package:expense_manager/expense/bloc/expenses_bloc.dart';
+import 'package:expense_manager/expense/expense_item.dart';
 import 'package:expense_manager/expense/expense_service.dart';
 import 'package:expense_manager/utils.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _ExpensesContainer extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: state.expenses.length,
                   itemBuilder: (context, index) {
-                    return Text("Expense $index");
+                    return ExpenseItem(expense: state.expenses[index]);
                   },
                 ),
               ),

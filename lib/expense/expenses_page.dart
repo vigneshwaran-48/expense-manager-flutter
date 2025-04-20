@@ -1,4 +1,4 @@
-import 'package:expense_manager/expense/ExpensesContainer.dart';
+import 'package:expense_manager/expense/expenses_container.dart';
 import 'package:expense_manager/user/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
