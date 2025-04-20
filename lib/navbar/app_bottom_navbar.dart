@@ -9,39 +9,38 @@ class AppBottomNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _onPressed(int index) {
+      context.read<NavbarCubit>().updateIndex(index);
+      context.go(navRoutes[index]);
+    }
+
     return BlocBuilder<NavbarCubit, int>(
       builder: (blocContext, index) {
-        return BottomNavigationBar(
-          onTap: (index) {
-            context.read<NavbarCubit>().updateIndex(index);
-            context.go(navRoutes[index]);
-          },
-          currentIndex: index,
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-          showUnselectedLabels: true,
-          type: BottomNavigationBarType.fixed,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard),
-              label: "Dashboard",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.payment),
-              label: "Expenses",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.family_restroom),
-              label: "Family",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.category),
-              label: "Categories",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: "Settings",
-            ),
-          ],
+        return BottomAppBar(
+          elevation: 0,
+          shape: CircularNotchedRectangle(),
+          notchMargin: 10,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: Icon(Icons.dashboard),
+                onPressed: () => _onPressed(0),
+              ),
+              IconButton(
+                icon: Icon(Icons.payment),
+                onPressed: () => _onPressed(1),
+              ),
+              IconButton(
+                icon: Icon(Icons.family_restroom),
+                onPressed: () => _onPressed(2),
+              ),
+              IconButton(
+                icon: Icon(Icons.category),
+                onPressed: () => _onPressed(3),
+              ),
+            ],
+          ),
         );
       },
     );

@@ -1,13 +1,11 @@
-import 'package:expense_manager/expense/bloc/expenses_bloc.dart';
-import 'package:expense_manager/expense/expense_service.dart';
 import 'package:expense_manager/navbar/app_bottom_navbar.dart';
 import 'package:expense_manager/navbar/app_drawer.dart';
 import 'package:expense_manager/navbar/app_sidebar.dart';
 import 'package:expense_manager/navbar/constants.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';
-import 'package:expense_manager/user/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class AppLayout extends StatelessWidget {
   const AppLayout({super.key, required this.child});
@@ -42,8 +40,21 @@ class AppLayout extends StatelessWidget {
               ),
             Expanded(
               child: Scaffold(
+                extendBody: true,
                 appBar: _appBar(),
                 drawer: isTabLikeScreen ? AppDrawer() : null,
+                floatingActionButton:
+                    GoRouterState.of(context).uri.toString() == "/expenses"
+                        ? FloatingActionButton(
+                          onPressed: () => {},
+                          shape: CircleBorder(),
+                          child: Icon(Icons.add),
+                        )
+                        : null,
+                floatingActionButtonLocation:
+                    isMobile
+                        ? FloatingActionButtonLocation.centerDocked
+                        : FloatingActionButtonLocation.endFloat,
                 bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
                 body: Column(
                   children: [
