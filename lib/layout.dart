@@ -46,7 +46,7 @@ class AppLayout extends StatelessWidget {
                 floatingActionButton:
                     GoRouterState.of(context).uri.toString() == "/expenses"
                         ? FloatingActionButton(
-                          onPressed: () => {},
+                          onPressed: () => context.go("/expenses/create"),
                           shape: CircleBorder(),
                           child: Icon(Icons.add),
                         )
