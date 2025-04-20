@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:expense_manager/expense/expense.dart';
 import 'package:flutter/material.dart';
 
@@ -9,15 +11,36 @@ class ExpenseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(7),
+        color: Theme.of(context).colorScheme.onPrimary,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(expense.title!),
-          Text(expense.amount.toString()),
-          Text(expense.date!.toDate().toString()),
-          Text(expense.createdBy!.email)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                expense.title!,
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Text(expense.date!.toDate().toString()),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "₹ ${expense.amount.toString()}",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              Text(expense.createdBy!.email),
+            ],
+          ),
         ],
       ),
     );

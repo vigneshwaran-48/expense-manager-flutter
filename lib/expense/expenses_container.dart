@@ -45,28 +45,40 @@ class _ExpensesContainer extends StatelessWidget {
           return Center(child: CircularProgressIndicator(color: Colors.white));
         }
         if (state is ExpensesLoaded) {
-          return Column(
-            children: [
-              Row(
-                children: [
-                  Flexible(
-                    child: Container(
-                      constraints: BoxConstraints(maxWidth: 500, minWidth: 100),
-                      child: _SearchBar(),
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: 500,
+                          minWidth: 100,
+                        ),
+                        child: _SearchBar(),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Divider(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: state.expenses.length,
-                  itemBuilder: (context, index) {
-                    return ExpenseItem(expense: state.expenses[index]);
-                  },
+                  ],
                 ),
-              ),
-            ],
+                Divider(),
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 400,
+                      mainAxisExtent: 300,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: 10,
+                    itemBuilder:
+                        (context, index) =>
+                            ExpenseItem(expense: state.expenses[0]),
+                  ),
+                ),
+              ],
+            ),
           );
         }
         if (state is ExpensesError) {
