@@ -1,10 +1,13 @@
-import 'package:expense_manager/expense/expenses_container.dart';
+import 'package:expense_manager/expense/bloc/expenses_bloc.dart';
+import 'package:expense_manager/expense/expense_service.dart';
 import 'package:expense_manager/user/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExpensesPage extends StatelessWidget {
-  const ExpensesPage({super.key});
+  const ExpensesPage({super.key, required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,13 @@ class ExpensesPage extends StatelessWidget {
           return Center(child: CircularProgressIndicator(color: Colors.white));
         }
         if (state is UserLoaded) {
-          return ExpensesContainer(userId: state.user.id);
+          return BlocProvider(
+            create:
+                (_) => ExpensesBloc(
+                  expenseService: ExpenseService(userId: state.user.id),
+                )..add(LoadExpenses()),
+            child: child,
+          );
         }
         if (state is UserError) {
           return Center(child: Text(state.errMsg));

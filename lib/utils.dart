@@ -4,7 +4,7 @@ SnackBar buildSnackbar({
   required BuildContext context,
   required String message,
   required bool isError,
-  required VoidCallback onClose,
+  required Function onClose,
 }) {
   return SnackBar(
     elevation: 0,
@@ -22,7 +22,7 @@ SnackBar buildSnackbar({
             Icon(isError ? Icons.error : Icons.info),
             SizedBox(width: 10),
             Expanded(child: Text(message)),
-            IconButton(onPressed: onClose, icon: Icon(Icons.close)),
+            IconButton(onPressed: () => onClose(context), icon: Icon(Icons.close)),
           ],
         ),
       ),

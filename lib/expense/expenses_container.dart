@@ -1,29 +1,11 @@
 import 'package:expense_manager/expense/bloc/expenses_bloc.dart';
 import 'package:expense_manager/expense/expense_item.dart';
-import 'package:expense_manager/expense/expense_service.dart';
 import 'package:expense_manager/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExpensesContainer extends StatelessWidget {
-  const ExpensesContainer({super.key, required this.userId});
-
-  final String userId;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (_) =>
-              ExpensesBloc(expenseService: ExpenseService(userId: userId))
-                ..add(LoadExpenses()),
-      child: _ExpensesContainer(),
-    );
-  }
-}
-
-class _ExpensesContainer extends StatelessWidget {
-  const _ExpensesContainer({super.key});
+  const ExpensesContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +53,10 @@ class _ExpensesContainer extends StatelessWidget {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                     ),
-                    itemCount: 10,
+                    itemCount: state.expenses.length,
                     itemBuilder:
                         (context, index) =>
-                            ExpenseItem(expense: state.expenses[0]),
+                            ExpenseItem(expense: state.expenses[index]),
                   ),
                 ),
               ],

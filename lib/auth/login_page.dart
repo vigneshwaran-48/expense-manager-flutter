@@ -58,6 +58,9 @@ class _LoginFormState extends State<LoginForm> {
   bool _loading = false;
 
   void _handleLogin() {
+    if (_loading) {
+      return;
+    }
     if (!_formKey.currentState!.validate()) {
       return;
     }

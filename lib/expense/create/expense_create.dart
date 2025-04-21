@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_manager/expense/bloc/expenses_bloc.dart';
 import 'package:expense_manager/expense/expense.dart';
-import 'package:expense_manager/user/bloc/user_bloc.dart';
+import 'package:expense_manager/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,17 +13,7 @@ class ExpenseCreatePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
-      builder: (context, state) {
-        if (state is UserError) {
-          return Center(child: Text(state.errMsg));
-        }
-        if (state is UserLoading) {
-          return Center(child: CircularProgressIndicator(color: Colors.white));
-        }
-        return Center(child: _ExpenseCreationForm());
-      },
-    );
+    return Center(child: _ExpenseCreationForm());
   }
 }
 
@@ -43,6 +33,7 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
   final _formKey = GlobalKey<FormState>();
 
   DateTime? _selectedDate;
+  bool _loading = false;
 
   @override
   void dispose() {
@@ -54,6 +45,9 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
   }
 
   void _handleCreateExpense() {
+    if (_loading) {
+      return;
+    }
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -115,109 +109,147 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 40, 10, 10),
-      constraints: BoxConstraints(maxWidth: 600),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _titleController,
-              maxLength: 50,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Title is required";
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                labelText: "Title",
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-              ),
+    return BlocConsumer<ExpensesBloc, ExpensesState>(
+      listener: (context, state) {
+        if (state is ExpenseAdded) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            buildSnackbar(
+              context: context,
+              message: "Added expense",
+              isError: false,
+              onClose: (c) => ScaffoldMessenger.of(c).clearSnackBars(),
             ),
-            SizedBox(height: 20),
-            TextFormField(
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Amount is required";
-                }
-                if (double.tryParse(value)! <= 0) {
-                  return "Amount should greater than 0";
-                }
-              },
-              decoration: InputDecoration(
-                hintText: "Enter a amount",
-                labelText: "Amount",
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            TextFormField(
-              controller: _dateController,
-              readOnly: true,
-              onTap: () => _handleSelectDate(context),
-              decoration: InputDecoration(
-                labelText: "Date",
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            TextFormField(
-              controller: _descriptionController,
-              maxLines: 5,
-              maxLength: 300,
-              decoration: InputDecoration(
-                labelText: "Description",
-                alignLabelWithHint: true,
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+          );
+          context.read<ExpensesBloc>().add(LoadExpenses());
+          context.go("/expenses");
+        }
+      },
+      builder: (context, state) {
+        if (state is AddingExpense) {
+          _loading = true;
+        }
+        return Container(
+          padding: EdgeInsets.fromLTRB(10, 40, 10, 10),
+          constraints: BoxConstraints(maxWidth: 600),
+          child: Form(
+            key: _formKey,
+            child: Column(
               children: [
-                ElevatedButton(
-                  onPressed: () => context.go("/expenses"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7),
-                      side: BorderSide(color: Colors.grey),
+                TextFormField(
+                  controller: _titleController,
+                  maxLength: 50,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Title is required";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    labelText: "Title",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
                     ),
                   ),
-                  child: Text("Cancel"),
                 ),
-                SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: _handleCreateExpense,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Amount is required";
+                    }
+                    if (double.tryParse(value)! <= 0) {
+                      return "Amount should greater than 0";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: "Enter a amount",
+                    labelText: "Amount",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
                     ),
                   ),
-                  child: Text("Create"),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _dateController,
+                  readOnly: true,
+                  onTap: () => _handleSelectDate(context),
+                  decoration: InputDecoration(
+                    labelText: "Date",
+                    alignLabelWithHint: true,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 5,
+                  maxLength: 300,
+                  decoration: InputDecoration(
+                    labelText: "Description",
+                    alignLabelWithHint: true,
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => context.go("/expenses"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7),
+                          side: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      child: Text("Cancel"),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: _handleCreateExpense,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                      ),
+                      child:
+                          _loading
+                              ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Creating"),
+                                  SizedBox(width: 10),
+                                  SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              )
+                              : Text("Create"),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

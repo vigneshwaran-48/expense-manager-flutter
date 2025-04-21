@@ -39,4 +39,15 @@ class Expense {
       date: data.get("date"),
     );
   }
+
+  Map<String, dynamic> toFireStore(DocumentReference createdBy) {
+    return {
+      "id": id,
+      "title": title,
+      "description": description,
+      "createdBy": createdBy,
+      "amount": amount,
+      "date": date,
+    };
+  }
 }

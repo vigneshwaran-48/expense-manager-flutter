@@ -18,3 +18,11 @@ final class ExpensesLoaded extends ExpensesState {
 
   ExpensesLoaded({required this.expenses});
 }
+
+final class ExpenseAdded extends ExpensesState {
+  final Expense expense;
+
+  ExpenseAdded({required this.expense});
+}
+
+final class AddingExpense extends ExpensesState {}

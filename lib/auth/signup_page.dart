@@ -58,6 +58,9 @@ class _SignUpFormState extends State<SignUpForm> {
   bool _loading = false;
 
   void _handleSignup() {
+    if (_loading) {
+      return;
+    }
     if (!_formKey.currentState!.validate()) {
       return;
     }

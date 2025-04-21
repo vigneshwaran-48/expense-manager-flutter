@@ -14,7 +14,18 @@ class UserService {
       return null;
     } catch (e) {
       print('Error fetching user: $e');
-      return null;
+      rethrow;
+    }
+  }
+
+  Future<DocumentReference<Map<String, dynamic>>> getUserRef(
+    String userId,
+  ) async {
+    try {
+      return await _usersCollection.doc(userId);
+    } catch (e) {
+      print('Error fetching user: $e');
+      rethrow;
     }
   }
 
