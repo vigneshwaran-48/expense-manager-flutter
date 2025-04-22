@@ -51,4 +51,18 @@ class ExpenseService {
       rethrow;
     }
   }
+
+  Future<void> removeExpense(String id) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection("expenses")
+          .doc(id)
+          .delete();
+    } on FirebaseException catch (err) {
+      print(err);
+      rethrow;
+    }
+  }
 }

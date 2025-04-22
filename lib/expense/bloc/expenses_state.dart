@@ -26,3 +26,15 @@ final class ExpenseAdded extends ExpensesState {
 }
 
 final class AddingExpense extends ExpensesState {}
+
+final class ExpenseDeleting extends ExpensesState {
+  final String id;
+
+  ExpenseDeleting({required this.id});
+}
+
+final class ExpenseDeleted extends ExpensesState {
+  final String id;
+
+  ExpenseDeleted({required this.id});
+}

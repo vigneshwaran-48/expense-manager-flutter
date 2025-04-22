@@ -16,6 +16,10 @@ class ExpensesContainer extends StatelessWidget {
             context,
           ).showSnackBar(buildSnackBar(isError: true, message: state.errMsg));
         }
+        if (state is ExpenseDeleted) {
+          context.read<ExpensesBloc>().add(LoadExpenses());
+          return;
+        }
       },
       builder: (context, state) {
         if (state is ExpensesLoading) {

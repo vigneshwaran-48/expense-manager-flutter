@@ -53,5 +53,19 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
         emit(ExpensesError(errMsg: "Error while adding expenses"));
       }
     });
+
+    on<RemoveExpense>((event, emit) async {
+      try {
+        emit(ExpenseDeleting(id: event.id));
+        await expenseService.removeExpense(event.id);
+        emit(ExpenseDeleted(id: event.id));
+      } on FirebaseException catch (err) {
+        print(err);
+        emit(ExpensesError(errMsg: "Error while removing expense"));
+      } catch (err) {
+        print(err);
+        emit(ExpensesError(errMsg: "Error while removing expense"));
+      }
+    });
   }
 }
