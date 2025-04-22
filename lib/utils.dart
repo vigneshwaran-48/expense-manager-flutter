@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-SnackBar buildSnackbar({
-  required BuildContext context,
-  required String message,
-  required bool isError,
-  required Function onClose,
-}) {
-  return SnackBar(
-    elevation: 0,
-    backgroundColor: Colors.transparent,
-    content: Card(
+class AppSnackBar extends StatelessWidget {
+  const AppSnackBar({super.key, required this.message, required this.isError});
+
+  final String message;
+  final bool isError;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -22,11 +21,22 @@ SnackBar buildSnackbar({
             Icon(isError ? Icons.error : Icons.info),
             SizedBox(width: 10),
             Expanded(child: Text(message)),
-            IconButton(onPressed: () => onClose(context), icon: Icon(Icons.close)),
+            IconButton(
+              onPressed: () => ScaffoldMessenger.of(context).clearSnackBars(),
+              icon: Icon(Icons.close),
+            ),
           ],
         ),
       ),
-    ),
+    );
+  }
+}
+
+SnackBar buildSnackBar({required String message, required bool isError}) {
+  return SnackBar(
+    elevation: 0,
+    backgroundColor: Colors.transparent,
     behavior: SnackBarBehavior.floating,
+    content: AppSnackBar(message: message, isError: isError),
   );
 }

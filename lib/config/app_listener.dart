@@ -24,13 +24,7 @@ class AppListener extends StatelessWidget {
               }
               if (state is AuthError) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  buildSnackbar(
-                    context: context,
-                    isError: true,
-                    message: state.errMsg,
-                    onClose:
-                        () => ScaffoldMessenger.of(context).clearSnackBars(),
-                  ),
+                  buildSnackBar(isError: true, message: state.errMsg),
                 );
               }
               if (state is UnAuthenticated) {
@@ -42,13 +36,7 @@ class AppListener extends StatelessWidget {
             listener: (context, state) {
               if (state is UserError) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  buildSnackbar(
-                    context: context,
-                    isError: true,
-                    message: state.errMsg,
-                    onClose:
-                        () => ScaffoldMessenger.of(context).clearSnackBars(),
-                  ),
+                  buildSnackBar(isError: true, message: state.errMsg),
                 );
               }
             },

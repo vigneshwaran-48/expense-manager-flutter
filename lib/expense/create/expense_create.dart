@@ -113,12 +113,7 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
       listener: (context, state) {
         if (state is ExpenseAdded) {
           ScaffoldMessenger.of(context).showSnackBar(
-            buildSnackbar(
-              context: context,
-              message: "Added expense",
-              isError: false,
-              onClose: (c) => ScaffoldMessenger.of(c).clearSnackBars(),
-            ),
+            buildSnackBar(message: "Added Expense", isError: false),
           );
           context.read<ExpensesBloc>().add(LoadExpenses());
           context.go("/expenses");

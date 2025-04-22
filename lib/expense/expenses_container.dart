@@ -12,14 +12,9 @@ class ExpensesContainer extends StatelessWidget {
     return BlocConsumer<ExpensesBloc, ExpensesState>(
       listener: (context, state) {
         if (state is ExpensesError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildSnackbar(
-              context: context,
-              isError: true,
-              message: state.errMsg,
-              onClose: () => ScaffoldMessenger.of(context).clearSnackBars(),
-            ),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(buildSnackBar(isError: true, message: state.errMsg));
         }
       },
       builder: (context, state) {
