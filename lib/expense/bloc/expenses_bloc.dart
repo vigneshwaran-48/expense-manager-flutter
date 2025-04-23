@@ -56,7 +56,6 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
 
     on<RemoveExpense>((event, emit) async {
       try {
-        emit(ExpenseDeleting(id: event.id));
         await expenseService.removeExpense(event.id);
         emit(ExpenseDeleted(id: event.id));
       } on FirebaseException catch (err) {

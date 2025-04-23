@@ -17,12 +17,15 @@ class ExpensesContainer extends StatelessWidget {
           ).showSnackBar(buildSnackBar(isError: true, message: state.errMsg));
         }
         if (state is ExpenseDeleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            buildSnackBar(message: "Deleted expense", isError: false),
+          );
           context.read<ExpensesBloc>().add(LoadExpenses());
           return;
         }
       },
       builder: (context, state) {
-        if (state is ExpensesLoading) {
+        if (state is ExpensesLoading || state is ExpenseDeleted) {
           return Center(child: CircularProgressIndicator(color: Colors.white));
         }
         if (state is ExpensesLoaded) {
