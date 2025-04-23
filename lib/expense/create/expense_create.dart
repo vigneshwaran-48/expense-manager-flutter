@@ -51,6 +51,7 @@ class _ExpenseCreationFormState extends State<_ExpenseCreationForm> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+    _selectedDate ??= DateTime.now();
     BlocProvider.of<ExpensesBloc>(context).add(
       AddExpense(
         expense: Expense(

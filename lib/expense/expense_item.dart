@@ -27,20 +27,13 @@ class ExpenseItem extends StatelessWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     expense.title!,
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      context.read<ExpensesBloc>().add(
-                        RemoveExpense(id: expense.id!),
-                      );
-                    },
-                    icon: Icon(Icons.delete),
-                    color: Colors.red,
-                  ),
+                  ExpenseDeleteButton(id: expense.id!),
                 ],
               ),
               SizedBox(height: 10),
@@ -57,6 +50,54 @@ class ExpenseItem extends StatelessWidget {
               Text(expense.createdBy!.email),
             ],
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class ExpenseDeleteButton extends StatefulWidget {
+  const ExpenseDeleteButton({super.key, required this.id});
+
+  final String id;
+
+  @override
+  State<StatefulWidget> createState() => _ExpenseDeleteButtonState();
+}
+
+class _ExpenseDeleteButtonState extends State<ExpenseDeleteButton> {
+  bool _deleting = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 48.0,
+      height: 48.0,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (!_deleting)
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _deleting = true;
+                });
+                context.read<ExpensesBloc>().add(RemoveExpense(id: widget.id));
+              },
+              icon: const Icon(Icons.delete),
+              color: Colors.red,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          if (_deleting)
+            const SizedBox(
+              width: 24.0,
+              height: 24.0,
+              child: CircularProgressIndicator(
+                color: Colors.red,
+                strokeWidth: 2.0,
+              ),
+            ),
         ],
       ),
     );
