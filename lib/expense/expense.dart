@@ -48,6 +48,7 @@ class Expense {
       "createdBy": createdBy,
       "amount": amount,
       "date": date,
+      "titleLowerCase": title?.toLowerCase(), // Used for searching
     };
   }
 }

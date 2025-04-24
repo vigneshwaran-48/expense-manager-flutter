@@ -65,4 +65,24 @@ class ExpenseService {
       rethrow;
     }
   }
+
+  Future<List<Expense>> searchExpenses(String term) async {
+    term = term.toLowerCase();
+    try {
+      final results =
+          await FirebaseFirestore.instance
+              .collection("users")
+              .doc(userId)
+              .collection("expenses")
+              .where("titleLowerCase", isGreaterThanOrEqualTo: term)
+              .where("titleLowerCase", isLessThanOrEqualTo: "$term\uf8ff")
+              .get();
+      final expenseFutures =
+          results.docs.map((doc) => Expense.fromFireStore(doc)).toList();
+      return await Future.wait(expenseFutures);
+    } on FirebaseException catch (err) {
+      print(err);
+      rethrow;
+    }
+  }
 }

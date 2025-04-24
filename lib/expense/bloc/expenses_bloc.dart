@@ -60,10 +60,38 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
         emit(ExpenseDeleted(id: event.id));
       } on FirebaseException catch (err) {
         print(err);
-        emit(ExpensesError(errMsg: "Error while removing expense"));
+        emit(
+          ExpensesError(
+            errMsg:
+                err.message != null
+                    ? err.message!
+                    : "Error while removing expense",
+          ),
+        );
       } catch (err) {
         print(err);
         emit(ExpensesError(errMsg: "Error while removing expense"));
+      }
+    });
+
+    on<SearchExpense>((event, emit) async {
+      try {
+        emit(SearchingExpenses());
+        final searchResults = await expenseService.searchExpenses(event.term);
+        emit(ExpensesLoaded(expenses: searchResults));
+      } on FirebaseException catch (err) {
+        print(err);
+        emit(
+          ExpensesError(
+            errMsg:
+                err.message != null
+                    ? err.message!
+                    : "Error while searching expense",
+          ),
+        );
+      } catch (err) {
+        print(err);
+        emit(ExpensesError(errMsg: "Error while searching expense"));
       }
     });
   }

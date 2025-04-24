@@ -32,3 +32,5 @@ final class ExpenseDeleted extends ExpensesState {
 
   ExpenseDeleted({required this.id});
 }
+
+final class SearchingExpenses extends ExpensesState {}

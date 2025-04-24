@@ -9,46 +9,51 @@ class ExpensesContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ExpensesBloc, ExpensesState>(
-      listener: (context, state) {
-        if (state is ExpensesError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(buildSnackBar(isError: true, message: state.errMsg));
-        }
-        if (state is ExpenseDeleted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildSnackBar(message: "Deleted expense", isError: false),
-          );
-          context.read<ExpensesBloc>().add(LoadExpenses());
-          return;
-        }
-      },
-      builder: (context, state) {
-        if (state is ExpensesLoading || state is ExpenseDeleted) {
-          return Center(child: CircularProgressIndicator(color: Colors.white));
-        }
-        if (state is ExpensesLoaded) {
-          return Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: 500,
-                          minWidth: 100,
-                        ),
-                        child: _SearchBar(),
-                      ),
-                    ),
-                  ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Flexible(
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: 500, minWidth: 100),
+                  child: _SearchBar(),
                 ),
-                Divider(),
-                Expanded(
-                  child: GridView.builder(
+              ),
+            ],
+          ),
+          Divider(),
+          Expanded(
+            child: BlocConsumer<ExpensesBloc, ExpensesState>(
+              listener: (context, state) {
+                if (state is ExpensesError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    buildSnackBar(isError: true, message: state.errMsg),
+                  );
+                }
+                if (state is ExpenseDeleted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    buildSnackBar(message: "Deleted expense", isError: false),
+                  );
+                  context.read<ExpensesBloc>().add(LoadExpenses());
+                  return;
+                }
+              },
+              builder: (context, state) {
+                if (state is ExpensesLoading || state is ExpenseDeleted) {
+                  return Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  );
+                }
+                if (state is SearchingExpenses) {
+                  return Center(child: Icon(Icons.search));
+                }
+                if (state is ExpensesError) {
+                  return Center(child: Text("Error while loading expenses"));
+                }
+                if (state is ExpensesLoaded) {
+                  return GridView.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 400,
                       mainAxisExtent: 300,
@@ -59,17 +64,14 @@ class ExpensesContainer extends StatelessWidget {
                     itemBuilder:
                         (context, index) =>
                             ExpenseItem(expense: state.expenses[index]),
-                  ),
-                ),
-              ],
+                  );
+                }
+                return Center(child: Text("Unknown expense state $state"));
+              },
             ),
-          );
-        }
-        if (state is ExpensesError) {
-          return Center(child: Text("Error while loading expenses"));
-        }
-        return Center(child: Text("Unknown expense state $state"));
-      },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -82,7 +84,7 @@ class _SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<_SearchBar> {
-  final _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void dispose() {
@@ -90,13 +92,20 @@ class _SearchBarState extends State<_SearchBar> {
     super.dispose();
   }
 
+  void handleSearch(_) {
+    context.read<ExpensesBloc>().add(
+      SearchExpense(term: _searchController.text),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: TextField(
-        controller: _searchController,
         textAlignVertical: TextAlignVertical.center,
+        controller: _searchController,
+        onChanged: handleSearch,
         decoration: InputDecoration(
           prefixIcon: Icon(Icons.search),
           hintText: "Search",

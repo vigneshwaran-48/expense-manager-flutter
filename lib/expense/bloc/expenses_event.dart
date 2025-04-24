@@ -16,3 +16,9 @@ final class RemoveExpense extends ExpensesEvent {
 
   RemoveExpense({required this.id});
 }
+
+final class SearchExpense extends ExpensesEvent {
+  final String term;
+
+  SearchExpense({required this.term});
+}
