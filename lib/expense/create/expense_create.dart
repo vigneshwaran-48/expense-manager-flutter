@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_manager/expense/bloc/expenses_bloc.dart';
 import 'package:expense_manager/expense/expense.dart';
-import 'package:expense_manager/utils.dart';
+import 'package:expense_manager/utils/app_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

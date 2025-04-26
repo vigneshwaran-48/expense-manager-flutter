@@ -35,11 +35,7 @@ class ExpenseService {
   Future<Expense> addExpense(Expense expense) async {
     try {
       final user = await _userService.getUserRef(userId);
-      final result = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection("expenses")
-          .add(expense.toFireStore(user));
+      final result = await _expenseCollection.add(expense.toFireStore(user));
       return Expense(
         id: result.id,
         title: expense.title,
@@ -54,12 +50,7 @@ class ExpenseService {
 
   Future<void> removeExpense(String id) async {
     try {
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection("expenses")
-          .doc(id)
-          .delete();
+      await _expenseCollection.doc(id).delete();
     } on FirebaseException catch (err) {
       print(err);
       rethrow;
@@ -70,10 +61,7 @@ class ExpenseService {
     term = term.toLowerCase();
     try {
       final results =
-          await FirebaseFirestore.instance
-              .collection("users")
-              .doc(userId)
-              .collection("expenses")
+          await _expenseCollection
               .where("titleLowerCase", isGreaterThanOrEqualTo: term)
               .where("titleLowerCase", isLessThanOrEqualTo: "$term\uf8ff")
               .get();

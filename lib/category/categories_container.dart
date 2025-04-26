@@ -1,12 +1,11 @@
-import 'package:expense_manager/expense/bloc/expenses_bloc.dart';
-import 'package:expense_manager/expense/expense_item.dart';
+import 'package:expense_manager/category/bloc/category_bloc.dart';
 import 'package:expense_manager/utils/app_snackbar.dart';
 import 'package:expense_manager/utils/searchbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ExpensesContainer extends StatelessWidget {
-  const ExpensesContainer({super.key});
+class CategoriesContainer extends StatelessWidget {
+  const CategoriesContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +20,7 @@ class ExpensesContainer extends StatelessWidget {
                   constraints: BoxConstraints(maxWidth: 500, minWidth: 100),
                   child: AppSearchBar(
                     onSearch: (value) {
-                      context.read<ExpensesBloc>().add(
-                        SearchExpense(term: value),
-                      );
+                      print("Searched for categories $value");
                     },
                   ),
                 ),
@@ -32,47 +29,47 @@ class ExpensesContainer extends StatelessWidget {
           ),
           Divider(),
           Expanded(
-            child: BlocConsumer<ExpensesBloc, ExpensesState>(
+            child: BlocConsumer<CategoryBloc, CategoryState>(
               listener: (context, state) {
-                if (state is ExpensesError) {
+                if (state is CategoryError) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     buildSnackBar(isError: true, message: state.errMsg),
                   );
                 }
-                if (state is ExpenseDeleted) {
+                if (state is CategoryDeleted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     buildSnackBar(message: "Deleted expense", isError: false),
                   );
-                  context.read<ExpensesBloc>().add(LoadExpenses());
+                  context.read<CategoryBloc>().add(LoadCategories());
                   return;
                 }
               },
               builder: (context, state) {
-                if (state is ExpensesLoading || state is ExpenseDeleted) {
+                if (state is CategoryLoading) {
                   return Center(
                     child: CircularProgressIndicator(color: Colors.white),
                   );
                 }
-                if (state is SearchingExpenses) {
+                if (state is SearchingCategory) {
                   return Center(child: Icon(Icons.search));
                 }
-                if (state is ExpensesError) {
+                if (state is CategoryError) {
                   return Center(child: Text(state.errMsg));
                 }
-                if (state is ExpensesLoaded) {
-                  return GridView.builder(
-                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 400,
-                      mainAxisExtent: 300,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemCount: state.expenses.length,
-                    itemBuilder:
-                        (context, index) =>
-                            ExpenseItem(expense: state.expenses[index]),
-                  );
-                }
+                // if (state is ExpensesLoaded) {
+                //   return GridView.builder(
+                //     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                //       maxCrossAxisExtent: 400,
+                //       mainAxisExtent: 300,
+                //       crossAxisSpacing: 10,
+                //       mainAxisSpacing: 10,
+                //     ),
+                //     itemCount: state.expenses.length,
+                //     itemBuilder:
+                //         (context, index) =>
+                //             ExpenseItem(expense: state.expenses[index]),
+                //   );
+                // }
                 return Center(child: Text("Unknown expense state $state"));
               },
             ),

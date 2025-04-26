@@ -3,6 +3,8 @@ import 'package:expense_manager/auth/bloc/auth_event.dart';
 import 'package:expense_manager/auth/bloc/auth_state.dart';
 import 'package:expense_manager/auth/login_page.dart';
 import 'package:expense_manager/auth/signup_page.dart';
+import 'package:expense_manager/category/categories_container.dart';
+import 'package:expense_manager/category/category_page.dart';
 import 'package:expense_manager/config/app_listener.dart';
 import 'package:expense_manager/expense/create/expense_create.dart';
 import 'package:expense_manager/expense/expenses_container.dart';
@@ -68,9 +70,15 @@ class AppRouter {
                   path: "/family",
                   builder: (context, state) => Text("Family"),
                 ),
-                GoRoute(
-                  path: "/categories",
-                  builder: (context, state) => Text("Categories"),
+                ShellRoute(
+                  builder:
+                      (context, state, child) => CategoryPage(child: child),
+                  routes: [
+                    GoRoute(
+                      path: "/categories",
+                      builder: (context, state) => CategoriesContainer(),
+                    ),
+                  ],
                 ),
                 GoRoute(
                   path: "/settings",
