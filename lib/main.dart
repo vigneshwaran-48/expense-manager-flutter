@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
       title: "Expense Manager",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primarySwatch: Colors.red,
         colorScheme: ColorScheme.highContrastDark().copyWith(
           surface: const Color(0xFF1B1B1B),
         ),

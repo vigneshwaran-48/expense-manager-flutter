@@ -1,4 +1,5 @@
 import 'package:expense_manager/category/bloc/category_bloc.dart';
+import 'package:expense_manager/category/category_item.dart';
 import 'package:expense_manager/utils/app_snackbar.dart';
 import 'package:expense_manager/utils/searchbar.dart';
 import 'package:flutter/material.dart';
@@ -56,20 +57,20 @@ class CategoriesContainer extends StatelessWidget {
                 if (state is CategoryError) {
                   return Center(child: Text(state.errMsg));
                 }
-                // if (state is ExpensesLoaded) {
-                //   return GridView.builder(
-                //     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                //       maxCrossAxisExtent: 400,
-                //       mainAxisExtent: 300,
-                //       crossAxisSpacing: 10,
-                //       mainAxisSpacing: 10,
-                //     ),
-                //     itemCount: state.expenses.length,
-                //     itemBuilder:
-                //         (context, index) =>
-                //             ExpenseItem(expense: state.expenses[index]),
-                //   );
-                // }
+                if (state is CategoriesLoaded) {
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 400,
+                      mainAxisExtent: 300,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: state.categories.length,
+                    itemBuilder:
+                        (context, index) =>
+                            CategoryItem(category: state.categories[index]),
+                  );
+                }
                 return Center(child: Text("Unknown expense state $state"));
               },
             ),

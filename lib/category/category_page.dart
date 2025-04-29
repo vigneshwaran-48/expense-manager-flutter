@@ -21,7 +21,7 @@ class CategoryPage extends StatelessWidget {
             create:
                 (_) => CategoryBloc(
                   categoryService: CategoryService(userId: state.user.id),
-                ),
+                )..add(LoadCategories()),
             child: child,
           );
         }
