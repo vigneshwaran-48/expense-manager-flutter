@@ -1,3 +1,4 @@
+import 'package:expense_manager/category/AddCategoryModal.dart';
 import 'package:expense_manager/navbar/app_bottom_navbar.dart';
 import 'package:expense_manager/navbar/app_drawer.dart';
 import 'package:expense_manager/navbar/app_sidebar.dart';
@@ -17,6 +18,8 @@ class AppLayout extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     bool isMobile = width <= 550;
     bool isTabLikeScreen = width > 550 && width < 1200;
+
+    String uri = GoRouterState.of(context).uri.toString();
 
     return SafeArea(
       child: Container(
@@ -44,9 +47,16 @@ class AppLayout extends StatelessWidget {
                 appBar: _appBar(),
                 drawer: isTabLikeScreen ? AppDrawer() : null,
                 floatingActionButton:
-                    GoRouterState.of(context).uri.toString() == "/expenses"
+                    uri == "/expenses" || uri == "/categories"
                         ? FloatingActionButton(
-                          onPressed: () => context.go("/expenses/create"),
+                          onPressed: () {
+                            if (uri == "/expenses") {
+                              context.go("/expenses/create");
+                              return;
+                            }
+                            // Otherwise considering it as /categories' add button
+                            showAddCategoryModal(context);
+                          },
                           shape: CircleBorder(),
                           child: Icon(Icons.add),
                         )
