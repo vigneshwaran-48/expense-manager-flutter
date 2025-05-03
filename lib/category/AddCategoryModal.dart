@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_builder/responsive_builder.dart';
 
 void showAddCategoryModal(BuildContext context) {
   final screenWidth = MediaQuery.of(context).size.width;
@@ -64,32 +63,13 @@ void showAddCategoryModal(BuildContext context) {
                 child: Column(
                   children: [
                     // Added GestureDetector for the handle icon
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isExpanded =
-                              !isExpanded; // Toggle expansion state on tap
-                        });
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.only(top: 8),
-                        child: const Icon(
-                          // Use a handle icon
-                          Icons.expand_more,
-                          size: 30,
-                          color: Colors.grey, // Style the handle icon as needed
-                        ),
-                      ),
-                    ),
                     Expanded(
-                      child: LayoutBuilder(
-                        // Use LayoutBuilder to get the actual height
-                        builder: (context, constraints) {
-                          return SizedBox(
-                            height: constraints.maxHeight,
-                            child: const AddCategoryBottomSheet(),
-                          );
+                      child: AddCategoryBottomSheet(
+                        isExpanded: isExpanded,
+                        onExpandStateChange: () {
+                          setState(() {
+                            isExpanded = !isExpanded;
+                          });
                         },
                       ),
                     ),
@@ -159,7 +139,14 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
 
 // Bottom sheet widget for adding a category
 class AddCategoryBottomSheet extends StatelessWidget {
-  const AddCategoryBottomSheet({super.key});
+  const AddCategoryBottomSheet({
+    super.key,
+    required this.isExpanded,
+    required this.onExpandStateChange,
+  });
+
+  final bool isExpanded;
+  final VoidCallback onExpandStateChange;
 
   @override
   Widget build(BuildContext context) {
@@ -174,9 +161,33 @@ class AddCategoryBottomSheet extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const Text(
-                'Add Category',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: const Text(
+                        'Add Category',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: onExpandStateChange,
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Icon(
+                        // Use a handle icon
+                        isExpanded ? Icons.expand_less : Icons.expand_more,
+                        size: 30,
+                        color: Colors.grey, // Style the handle icon as needed
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               const AddCategoryForm(), // Reuse the form widget
