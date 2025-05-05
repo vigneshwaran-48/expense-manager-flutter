@@ -1,9 +1,12 @@
 import 'package:expense_manager/category/AddCategoryModal.dart';
+import 'package:expense_manager/category/bloc/category_bloc.dart';
+import 'package:expense_manager/category/category_service.dart';
 import 'package:expense_manager/navbar/app_bottom_navbar.dart';
 import 'package:expense_manager/navbar/app_drawer.dart';
 import 'package:expense_manager/navbar/app_sidebar.dart';
 import 'package:expense_manager/navbar/constants.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';
+import 'package:expense_manager/user/bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -42,39 +45,58 @@ class AppLayout extends StatelessWidget {
                 ),
               ),
             Expanded(
-              child: Scaffold(
-                extendBody: true,
-                appBar: _appBar(),
-                drawer: isTabLikeScreen ? AppDrawer() : null,
-                floatingActionButton:
-                    uri == "/expenses" || uri == "/categories"
-                        ? FloatingActionButton(
-                          onPressed: () {
-                            if (uri == "/expenses") {
-                              context.go("/expenses/create");
-                              return;
-                            }
-                            // Otherwise considering it as /categories' add button
-                            showAddCategoryModal(context);
-                          },
-                          shape: CircleBorder(),
-                          child: Icon(Icons.add),
-                        )
-                        : null,
-                floatingActionButtonLocation:
-                    isMobile
-                        ? FloatingActionButtonLocation.centerDocked
-                        : FloatingActionButtonLocation.endFloat,
-                bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
-                body: Column(
-                  children: [
-                    Container(
-                      height: 15,
-                      color: Theme.of(context).colorScheme.onPrimary,
+              child: BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  CategoryBloc categoryBloc = CategoryBloc(
+                    categoryService: CategoryService.init(),
+                  );
+                  if (state is UserLoading || state is UserInitial) {
+                    categoryBloc.add(CategoryInitializing());
+                  } else if (state is UserError) {
+                    categoryBloc.add(CategoryInitializing());
+                  } else if (state is UserLoaded) {
+                    categoryBloc = CategoryBloc(
+                      categoryService: CategoryService(userId: state.user.id),
+                    )..add(LoadCategories());
+                  }
+                  return MultiBlocProvider(
+                    providers: [BlocProvider(create: (_) => categoryBloc)],
+                    child: Scaffold(
+                      extendBody: true,
+                      appBar: _appBar(),
+                      drawer: isTabLikeScreen ? AppDrawer() : null,
+                      floatingActionButton:
+                          uri == "/expenses" || uri == "/categories"
+                              ? FloatingActionButton(
+                                onPressed: () {
+                                  if (uri == "/expenses") {
+                                    context.go("/expenses/create");
+                                    return;
+                                  }
+                                  // Otherwise considering it as /categories' add button
+                                  showAddCategoryModal(context);
+                                },
+                                shape: CircleBorder(),
+                                child: Icon(Icons.add),
+                              )
+                              : null,
+                      floatingActionButtonLocation:
+                          isMobile
+                              ? FloatingActionButtonLocation.centerDocked
+                              : FloatingActionButtonLocation.endFloat,
+                      bottomNavigationBar: isMobile ? AppBottomNavbar() : null,
+                      body: Column(
+                        children: [
+                          Container(
+                            height: 15,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                          Expanded(child: child),
+                        ],
+                      ),
                     ),
-                    Expanded(child: child),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],

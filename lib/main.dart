@@ -1,5 +1,7 @@
 import 'package:expense_manager/auth/bloc/auth_bloc.dart';
 import 'package:expense_manager/auth/bloc/auth_event.dart';
+import 'package:expense_manager/category/bloc/category_bloc.dart';
+import 'package:expense_manager/category/category_service.dart';
 import 'package:expense_manager/config/router.dart';
 import 'package:expense_manager/firebase_options.dart';
 import 'package:expense_manager/navbar/navbar_cubit.dart';

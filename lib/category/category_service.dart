@@ -13,6 +13,8 @@ class CategoryService {
           .doc(userId)
           .collection("categories");
 
+  CategoryService.init(this._categoriesCollection) : userId = "";
+
   Future<List<Category>> getCategories() async {
     try {
       final snapshot = await _categoriesCollection.get();

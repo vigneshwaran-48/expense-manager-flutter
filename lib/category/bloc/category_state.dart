@@ -17,3 +17,5 @@ final class CategoryState {
     this.errMsg = "",
   });
 }
+
+final class CategoryInitial extends CategoryState {}

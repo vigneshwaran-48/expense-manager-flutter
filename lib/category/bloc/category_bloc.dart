@@ -13,6 +13,9 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   CategoryBloc({required this.categoryService})
     : super(CategoryState(isLoading: true)) {
+    on<CategoryInitializing>((event, emit) {
+      emit(CategoryInitial());
+    });
     on<LoadCategories>((event, emit) async {
       try {
         emit(CategoryState(isLoading: true));
