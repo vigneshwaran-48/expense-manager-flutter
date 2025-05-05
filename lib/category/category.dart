@@ -12,4 +12,8 @@ final class Category {
       description: data["description"],
     );
   }
+
+  Map<String, dynamic> toFireStore() {
+    return {"id": id, "name": name, "description": description};
+  }
 }

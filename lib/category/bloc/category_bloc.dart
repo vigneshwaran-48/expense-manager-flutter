@@ -11,15 +11,17 @@ part 'category_state.dart';
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryService categoryService;
 
-  CategoryBloc({required this.categoryService}) : super(CategoryInitial()) {
+  CategoryBloc({required this.categoryService})
+    : super(CategoryState(isLoading: true)) {
     on<LoadCategories>((event, emit) async {
       try {
-        emit(CategoryLoading());
+        emit(CategoryState(isLoading: true));
         final categories = await categoryService.getCategories();
-        emit(CategoriesLoaded(categories: categories));
+        emit(CategoryState(categories: categories));
       } on FirebaseException catch (err) {
         emit(
-          CategoryError(
+          CategoryState(
+            isError: true,
             errMsg:
                 err.message != null
                     ? err.message!
@@ -27,7 +29,35 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
           ),
         );
       } catch (err) {
-        emit(CategoryError(errMsg: "Error while getting categories"));
+        emit(
+          CategoryState(
+            isError: true,
+            errMsg: "Error while getting categories",
+          ),
+        );
+      }
+    });
+
+    on<AddCategory>((event, emit) async {
+      try {
+        final addedCategory = await categoryService.addCategory(event.category);
+      } on FirebaseException catch (err) {
+        emit(
+          CategoryState(
+            isError: true,
+            errMsg:
+                err.message != null
+                    ? err.message!
+                    : "Error while getting categories",
+          ),
+        );
+      } catch (err) {
+        emit(
+          CategoryState(
+            isError: true,
+            errMsg: "Error while getting categories",
+          ),
+        );
       }
     });
   }

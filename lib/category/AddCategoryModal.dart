@@ -1,4 +1,7 @@
+import 'package:expense_manager/category/bloc/category_bloc.dart';
+import 'package:expense_manager/category/category.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void showAddCategoryModal(BuildContext context) {
   final screenWidth = MediaQuery.of(context).size.width;
@@ -11,22 +14,7 @@ void showAddCategoryModal(BuildContext context) {
       builder: (context) {
         return AlertDialog(
           title: const Text('Add Category'),
-          content: const AddCategoryForm(),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Add your logic to save the category
-                Navigator.of(context).pop();
-              },
-              child: const Text('Add'),
-            ),
-          ],
+          content: SizedBox(width: 500, child: const AddCategoryForm()),
         );
       },
     );
@@ -53,16 +41,9 @@ void showAddCategoryModal(BuildContext context) {
                   isExpanded
                       ? MediaQuery.of(context).size.height
                       : MediaQuery.of(context).size.height * 0.6,
-              // Adjust initial height as needed
-              decoration: const BoxDecoration(
-                color: Colors.white, // Ensure the background color is white
-                borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
-              ),
               child: Material(
-                //Added Material,
                 child: Column(
                   children: [
-                    // Added GestureDetector for the handle icon
                     Expanded(
                       child: AddCategoryBottomSheet(
                         isExpanded: isExpanded,
@@ -94,8 +75,23 @@ class AddCategoryForm extends StatefulWidget {
 
 class _AddCategoryFormState extends State<AddCategoryForm> {
   final _formKey = GlobalKey<FormState>();
-  String _categoryName = '';
-  String _categoryDescription = '';
+  final _nameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  void _handleAddCategory() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    print("Submitting");
+    //context.read<CategoryBloc>().add(AddCategory(category: Category(name: _nameController.text, description: _descriptionController.te)))
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +101,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextFormField(
+            controller: _nameController,
             decoration: const InputDecoration(labelText: 'Category Name'),
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -112,12 +109,10 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
               }
               return null;
             },
-            onSaved: (value) {
-              _categoryName = value!;
-            },
           ),
           const SizedBox(height: 12),
           TextFormField(
+            controller: _descriptionController,
             decoration: const InputDecoration(
               labelText: 'Category Description',
             ),
@@ -127,9 +122,25 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
               }
               return null;
             },
-            onSaved: (value) {
-              _categoryDescription = value!;
-            },
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Add logic to save
+                  _handleAddCategory();
+                },
+                child: const Text('Add'),
+              ),
+            ],
           ),
         ],
       ),
@@ -191,25 +202,6 @@ class AddCategoryBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const AddCategoryForm(), // Reuse the form widget
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Add logic to save
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Add'),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

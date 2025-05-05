@@ -32,32 +32,25 @@ class CategoriesContainer extends StatelessWidget {
           Expanded(
             child: BlocConsumer<CategoryBloc, CategoryState>(
               listener: (context, state) {
-                if (state is CategoryError) {
+                if (state.isError) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     buildSnackBar(isError: true, message: state.errMsg),
                   );
                 }
-                if (state is CategoryDeleted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    buildSnackBar(message: "Deleted expense", isError: false),
-                  );
-                  context.read<CategoryBloc>().add(LoadCategories());
-                  return;
-                }
               },
               builder: (context, state) {
-                if (state is CategoryLoading) {
+                if (state.isLoading) {
                   return Center(
                     child: CircularProgressIndicator(color: Colors.white),
                   );
                 }
-                if (state is SearchingCategory) {
+                if (state.isSearching) {
                   return Center(child: Icon(Icons.search));
                 }
-                if (state is CategoryError) {
+                if (state.isError) {
                   return Center(child: Text(state.errMsg));
                 }
-                if (state is CategoriesLoaded) {
+                if (state.categories != null) {
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 400,
@@ -65,10 +58,10 @@ class CategoriesContainer extends StatelessWidget {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                     ),
-                    itemCount: state.categories.length,
+                    itemCount: state.categories!.length,
                     itemBuilder:
                         (context, index) =>
-                            CategoryItem(category: state.categories[index]),
+                            CategoryItem(category: state.categories![index]),
                   );
                 }
                 return Center(child: Text("Unknown expense state $state"));
